@@ -34,7 +34,7 @@ module.exports = {
       Resume.addObject('github',{url: url});
       profilesWatcher.inProgress--;
     }],
-    ['linkedin.com', f
+    ['linkedin.com', 
      function(url, Resume, profilesWatcher) {
       Resume.addObject('linkedin',{url: url});
       profilesWatcher.inProgress--;
@@ -69,7 +69,6 @@ module.exports = {
             //profilesWatcher.inProgress--;
         }
     ]
-  ]
   ],
   inline: {
     //address: 'address',
