@@ -29,134 +29,56 @@ module.exports = {
     interests: ['interests'],
   },
   profiles: [
-    [
-      'github.com',
-      function(url, Resume, profilesWatcher) {
-        download(url, function(data, err) {
-          if (data) {
-            var $ = cheerio.load(data),
-              fullName = $('.vcard-fullname').text(),
-              location = $('.octicon-location')
-                .parent()
-                .text(),
-              mail = $('.octicon-mail')
-                .parent()
-                .text(),
-              link = $('.octicon-link')
-                .parent()
-                .text(),
-              clock = $('.octicon-clock')
-                .parent()
-                .text(),
-              company = $('.octicon-organization')
-                .parent()
-                .text();
-
-            Resume.addObject('github', {
-              name: fullName,
-              location: location,
-              email: mail,
-              link: link,
-              joined: clock,
-              company: company,
-            });
-          } else {
-            return console.log(err);
-          }
-          //profilesInProgress--;
-          profilesWatcher.inProgress--;
-        });
-      },
+      ['github.com', 
+       function(url, Resume, profilesWatcher) {
+      Resume.addObject('github',{url: url});
+      profilesWatcher.inProgress--;
+    }],
+    ['linkedin.com', f
+     function(url, Resume, profilesWatcher) {
+      Resume.addObject('linkedin',{url: url});
+      profilesWatcher.inProgress--;
+    }],
+     ['twitter.com',
+        function(url, Resume, profilesWatcher) {
+            Resume.addObject('twitter',{url: url});
+            //profilesWatcher.inProgress--;
+        }
     ],
-    [
-      'linkedin.com',
-      function(url, Resume, profilesWatcher) {
-        download(url, function(data, err) {
-          if (data) {
-            var $ = cheerio.load(data),
-              linkedData = {
-                positions: {
-                  past: [],
-                  current: {},
-                },
-                languages: [],
-                skills: [],
-                educations: [],
-                volunteering: [],
-                volunteeringOpportunities: [],
-              },
-              $pastPositions = $('.past-position'),
-              $currentPosition = $('.current-position'),
-              $languages = $('#languages-view .section-item > h4 > span'),
-              $skills = $(
-                '.skills-section .skill-pill .endorse-item-name-text'
-              ),
-              $educations = $('.education'),
-              $volunteeringListing = $('ul.volunteering-listing > li'),
-              $volunteeringOpportunities = $(
-                'ul.volunteering-opportunities > li'
-              );
-
-            linkedData.summary = $('#summary-item .summary').text();
-            linkedData.name = $('.full-name').text();
-            // current position
-            linkedData.positions.current = {
-              title: $currentPosition.find('header > h4').text(),
-              company: $currentPosition.find('header > h5').text(),
-              description: $currentPosition.find('p.description').text(),
-              period: $currentPosition.find('.experience-date-locale').text(),
-            };
-            // past positions
-            _.forEach($pastPositions, function(pastPosition) {
-              var $pastPosition = $(pastPosition);
-              linkedData.positions.past.push({
-                title: $pastPosition.find('header > h4').text(),
-                company: $pastPosition.find('header > h5').text(),
-                description: $pastPosition.find('p.description').text(),
-                period: $pastPosition.find('.experience-date-locale').text(),
-              });
-            });
-            _.forEach($languages, function(language) {
-              linkedData.languages.push($(language).text());
-            });
-            _.forEach($skills, function(skill) {
-              linkedData.skills.push($(skill).text());
-            });
-            _.forEach($educations, function(education) {
-              var $education = $(education);
-              linkedData.educations.push({
-                title: $education.find('header > h4').text(),
-                major: $education.find('header > h5').text(),
-                date: $education.find('.education-date').text(),
-              });
-            });
-            _.forEach($volunteeringListing, function(volunteering) {
-              linkedData.volunteering.push($(volunteering).text());
-            });
-            _.forEach($volunteeringOpportunities, function(volunteering) {
-              linkedData.volunteeringOpportunities.push($(volunteering).text());
-            });
-
-            Resume.addObject('linkedin', linkedData);
-          } else {
-            return console.log(err);
-          }
-          profilesWatcher.inProgress--;
-        });
-      },
+    ['behance.net',
+        function(url, Resume, profilesWatcher) {
+            Resume.addObject('behance',{url: url});
+            //profilesWatcher.inProgress--;
+        }
     ],
-    'facebook.com',
-    'bitbucket.org',
-    'stackoverflow.com',
+    ['facebook.com',
+        function(url, Resume, profilesWatcher) {
+            Resume.addObject('facebook',{url: url});
+            //profilesWatcher.inProgress--;
+        }
+    ],
+    ['bitbucket.org',
+        function(url, Resume, profilesWatcher) {
+            Resume.addObject('bitbucket',{url: url});
+            //profilesWatcher.inProgress--;
+        }
+    ],
+    ['stackoverflow.com',
+        function(url, Resume, profilesWatcher) {
+            Resume.addObject('stackoverflow',{url: url})
+            //profilesWatcher.inProgress--;
+        }
+    ]
+  ]
   ],
   inline: {
     //address: 'address',
     skype: 'skype',
   },
   regular: {
-    name: [/([A-Z][a-z]*)(\s[A-Z][a-z]*)/],
+    name: [/(?=^|$|[^\\p{L}])(^[A-ZÀÁÂÄÃÅĄĆČĖĘÈÉÊËƏİÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽА-ЯЁ]{1}[a-zàáâäãåąčćęèéêëėəįìíîïłńòóôöõøùúûüųūÿýżźñçčšžа-яё]{1,30}[ \n]{1}[A-ZÀÁÂÄÃÅĄĆČĖĘÈÉÊËƏİÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽА-ЯЁ]{1}[a-zàáâäãåąčćęèéêëėəįìíîïłńòóôöõøùúûüųūÿýżźñçčšžа-яё]{1,30}$|^[A-ZÀÁÂÄÃÅĄĆČĖĘÈÉÊËƏİÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽА-ЯЁ]{1}[A-ZÀÁÂÄÃÅĄĆČĖĘÈÉÊËƏİÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽА-ЯЁ]{1,30}[ \n]{1}[A-ZÀÁÂÄÃÅĄĆČĖĘÈÉÊËƏİÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽА-ЯЁ]{1}[A-ZÀÁÂÄÃÅĄĆČĖĘÈÉÊËƏİÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽА-ЯЁ]{1,30}$|^[A-ZÀÁÂÄÃÅĄĆČĖĘÈÉÊËƏİÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽА-ЯЁ]{1}[a-zàáâäãåąčćęèéêëėəįìíîïłńòóôöõøùúûüųūÿýżźñçčšžа-яё]{1,30}[ \n]{1}[A-ZÀÁÂÄÃÅĄĆČĖĘÈÉÊËƏİÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽА-ЯЁ]{1}[a-zàáâäãåąčćęèéêëėəįìíîïłńòóôöõøùúûüųūÿýżźñçčšžа-яё]{1,30}[\s]|^[A-ZÀÁÂÄÃÅĄĆČĖĘÈÉÊËƏİÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽА-ЯЁ]{1}[A-ZÀÁÂÄÃÅĄĆČĖĘÈÉÊËƏİÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽА-ЯЁ]{1,30}[ \n]{1}[A-ZÀÁÂÄÃÅĄĆČĖĘÈÉÊËƏİÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽА-ЯЁ]{1}[A-ZÀÁÂÄÃÅĄĆČĖĘÈÉÊËƏİÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽА-ЯЁ]{1,30}[\s]){1}/],
     email: [/([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})/],
-    phone: [/((?:\+?\d{1,3}[\s-])?\(?\d{2,3}\)?[\s.-]?\d{3}[\s.-]\d{4,5})/],
+    phone: [/((?:\+?\d{1,3}[\s-])?\(?\d{2,3}\)?[\s.-]?\d{3}[\s.-]\d{4,5})/, /((?:\+?\d{1,3}[\s-])?\(?\d{2,3}\)?[\s.-]?\d{3}[\s.-]\d{2}[\s.-]\d{2})/],
   },
 };
 
