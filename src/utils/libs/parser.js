@@ -67,7 +67,8 @@ function parse(PreparedFile, cbReturnResume) {
     row;
 
   // adding raw text key pair value
-  Resume.addKey('rowTextData', PreparedFile.row);
+ //  Resume.addKey('rowTextData', PreparedFile.row);
+  Resume.addKey('rowTextData', rawFileData);
   
   // save prepared file text (for debug)
   //fs.writeFileSync('./parsed/'+PreparedFile.name + '.txt', rawFileData);
