@@ -68,6 +68,7 @@ function parse(PreparedFile, cbReturnResume) {
 
   // adding raw text key pair value
  //  Resume.addKey('rowTextData', PreparedFile.row);
+  rawFileData = rawFileData.replace(/\t|\n|\r|RESUME|CURRICULAM VITA|,|Curriculum Vitae|MOBILE|NAME|EMAIL|DATE|:/gi, " ").replace(/ {2,}/g, " ").trim();
   Resume.addKey('rowTextData', rawFileData);
   
   // save prepared file text (for debug)
